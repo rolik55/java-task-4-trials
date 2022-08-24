@@ -16,6 +16,17 @@ public class ExtraTrial extends Trial {
 
     @Override
     public String toString() {
-        return super.toString() + ";" + Integer.toString(mark3);
+        return super.toString() + ";" + mark3 + ";" + isPassed();
+    }
+
+    @Override
+    public void clearMarks() {
+        super.clearMarks();
+        mark3 = 0;
+    }
+
+    @Override
+    public ExtraTrial getCopy() {
+        return new ExtraTrial(getAccount(), getMark1(), getMark2(), mark3);
     }
 }

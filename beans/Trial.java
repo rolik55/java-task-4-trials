@@ -14,7 +14,7 @@ public class Trial {
 
     @Override
     public String toString() {
-        return account + ";" + Integer.toString(mark1) + ";" + Integer.toString(mark2);
+        return getClass().getSimpleName() + ";" + account + ";" + mark1 + ";" + mark2 + ";" + isPassed();
     }
 
     public boolean isPassed() {
@@ -36,5 +36,13 @@ public class Trial {
     public void clearMarks() {
         mark1 = 0;
         mark2 = 0;
+    }
+
+    public final int getMarkSum() {
+        return mark1 + mark2;
+    }
+
+    public Trial getCopy() {
+        return new Trial(account, mark1, mark2);
     }
 }

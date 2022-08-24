@@ -3,11 +3,14 @@ import beans.LightTrial;
 import beans.StrongTrial;
 import beans.Trial;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Runner {
     public static void main(String[] args) {
-        List<Trial> trials = new ArrayList<>(List.of(
+        Trial[] array = new Trial[]{
                 new Trial("Trial1", 35, 60),
                 new Trial("Trial2", 53, 46),
                 new Trial("Trial3", 27, 16),
@@ -16,51 +19,23 @@ public class Runner {
                 new StrongTrial("StrongTrial1", 83, 78),
                 new StrongTrial("StrongTrial2", 64, 73),
                 new ExtraTrial("ExtraTrial1", 53, 75, 69),
-                new ExtraTrial("ExtraTrial2", 42, 36, 75)));
-        List<Trial> failedTrials = new ArrayList<>();
+                new ExtraTrial("ExtraTrial2", 42, 36, 75)
+        };
+        List<Trial> trials = Arrays.asList(array);
 
-        for (Trial trial : trials) {
-            System.out.println(trial);
-        }
+        trials.stream().forEach(System.out::println);
 
-        int passedCounter = 0;
-        for (Trial trial : trials) {
-            if (trial.isPassed()) {
-                passedCounter++;
-            } else {
-                failedTrials.add(trial);
-            }
-        }
+        int passedCounter = (int) trials.stream().filter(Trial::isPassed).count();
         System.out.println(passedCounter);
 
-        trials.sort((o1, o2) -> (o1.getMark1() + o1.getMark2()) - (o2.getMark1() + o2.getMark2()));
+        trials.sort(Comparator.comparingInt(Trial::getMarkSum));
 
-        for (Trial trial : trials) {
-            System.out.println(trial.getMark1() + trial.getMark2());
-        }
+        trials.stream().map(Trial::getMarkSum).forEach(System.out::println);
 
-        for (Trial trial : failedTrials) {
-            trial.clearMarks();
-            System.out.println(trial);
-        }
-        System.out.println("All trials failed: " + allTrialsFailed(trials));
+        List<Trial> failedTrials = trials.stream().filter(trial -> !trial.isPassed()).map(Trial::getCopy).peek(Trial::clearMarks).peek(System.out::println).toList();
+        System.out.println("failedTrials collection - all failed: " + (trials.stream().filter(trial -> !trial.isPassed()).count() == failedTrials.size()));
 
-        int[] sums = new int[trials.size()];
-        int i = 0;
-        for(Trial trial : trials) {
-            sums[i] = trial.getMark1() + trial.getMark2();
-            i++;
-        }
-        System.out.println(Arrays.toString(sums));
-    }
-
-    private static boolean allTrialsFailed(List<Trial> trials) {
-        int failedCounter = 0;
-        for (Trial trial : trials) {
-            if (!trial.isPassed()) {
-                failedCounter++;
-            }
-        }
-        return failedCounter == trials.size();
+        int[] sums = trials.stream().mapToInt(Trial::getMarkSum).toArray();
+        System.out.println(Arrays.stream(sums).mapToObj(Integer::toString).collect(Collectors.joining(", ")));
     }
 }

@@ -9,4 +9,9 @@ public class StrongTrial extends Trial {
     public boolean isPassed() {
         return (getMark1() / 2 + getMark2()) >= REQUIRED_MARK_TO_PASS;
     }
+
+    @Override
+    public StrongTrial getCopy() {
+        return new StrongTrial(getAccount(), getMark1(), getMark2());
+    }
 }

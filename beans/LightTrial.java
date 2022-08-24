@@ -12,4 +12,9 @@ public class LightTrial extends Trial {
     public boolean isPassed() {
         return getMark1() >= REQUIRED_MARK_1 && getMark2() >= REQUIRED_MARK_2;
     }
+
+    @Override
+    public LightTrial getCopy() {
+        return new LightTrial(getAccount(), getMark1(), getMark2());
+    }
 }
