@@ -6,6 +6,7 @@ import beans.Trial;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 public class Runner {
@@ -23,19 +24,34 @@ public class Runner {
         };
         List<Trial> trials = Arrays.asList(array);
 
-        trials.stream().forEach(System.out::println);
+        trials.stream().
+                forEach(System.out::println);
 
-        int passedCounter = (int) trials.stream().filter(Trial::isPassed).count();
+        long passedCounter = trials.stream()
+                .filter(Trial::isPassed)
+                .count();
         System.out.println(passedCounter);
 
-        trials.sort(Comparator.comparingInt(Trial::getMarkSum));
+        ToIntFunction<Trial> getMarkSum = trial -> (trial.getMark1() + trial.getMark2());
+        trials.sort(Comparator.comparingInt(getMarkSum));
 
-        trials.stream().map(Trial::getMarkSum).forEach(System.out::println);
+        trials.stream()
+                .mapToInt(getMarkSum)
+                .forEach(System.out::println);
 
-        List<Trial> failedTrials = trials.stream().filter(trial -> !trial.isPassed()).map(Trial::getCopy).peek(Trial::clearMarks).peek(System.out::println).toList();
-        System.out.println("failedTrials collection - all failed: " + (trials.stream().filter(trial -> !trial.isPassed()).count() == failedTrials.size()));
+        List<Trial> failedTrials = trials.stream()
+                .filter(trial -> !trial.isPassed())
+                .map(Trial::getCopy).peek(Trial::clearMarks)
+                .peek(System.out::println)
+                .toList();
+        System.out.println("failedTrials collection - all failed: " + (failedTrials.stream()
+                .noneMatch(Trial::isPassed)));
 
-        int[] sums = trials.stream().mapToInt(Trial::getMarkSum).toArray();
-        System.out.println(Arrays.stream(sums).mapToObj(Integer::toString).collect(Collectors.joining(", ")));
+        int[] sums = trials.stream()
+                .mapToInt(getMarkSum)
+                .toArray();
+        System.out.println(Arrays.stream(sums)
+                .mapToObj(Integer::toString)
+                .collect(Collectors.joining(", ")));
     }
 }

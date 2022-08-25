@@ -15,8 +15,8 @@ public class ExtraTrial extends Trial {
     }
 
     @Override
-    public String toString() {
-        return super.toString() + ";" + mark3 + ";" + isPassed();
+    protected String fieldsToString() {
+        return super.fieldsToString() + ";" + mark3;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ExtraTrial extends Trial {
     }
 
     @Override
-    public ExtraTrial getCopy() {
+    public Trial getCopy() {
         return new ExtraTrial(getAccount(), getMark1(), getMark2(), mark3);
     }
 }

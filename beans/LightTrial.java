@@ -14,7 +14,7 @@ public class LightTrial extends Trial {
     }
 
     @Override
-    public LightTrial getCopy() {
+    public Trial getCopy() {
         return new LightTrial(getAccount(), getMark1(), getMark2());
     }
 }

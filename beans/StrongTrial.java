@@ -11,7 +11,7 @@ public class StrongTrial extends Trial {
     }
 
     @Override
-    public StrongTrial getCopy() {
+    public Trial getCopy() {
         return new StrongTrial(getAccount(), getMark1(), getMark2());
     }
 }
